@@ -29,7 +29,8 @@ phases:
     - echo "Building Docker image ${IMAGE_URI}"
     - docker build --build-arg APP_VERSION=${IMAGE_TAG} -t ${IMAGE_URI} ./apps/sample_app
     - echo "Scanning image with Trivy"
-    - trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 0 ${IMAGE_URI}
+    - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format json --output trivy-report.json --exit-code 0 ${IMAGE_URI}
+    - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format sarif --output trivy-report.sarif ${IMAGE_URI}
     - docker push ${IMAGE_URI}
 
   post_build:
@@ -42,5 +43,7 @@ artifacts:
   files:
   - imageDetail.json
   - imageDetail.env
+  - trivy-report.json
+  - trivy-report.sarif
   - buildspec-deploy.yaml
   - charts/sample-app/**/*
