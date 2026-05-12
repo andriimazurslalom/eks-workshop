@@ -1,0 +1,8 @@
+replicaCount: 2
+
+service:
+  type: ClusterIP
+
+config:
+  appEnv: prod
+  logLevel: info

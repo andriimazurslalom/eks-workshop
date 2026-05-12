@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  exported-variables:
+    - IMAGE_TAG
+    - IMAGE_URI
+  variables:
+    IMAGE_REPO_NAME: sample-app
+    CONTAINER_NAME: sample-app
+
+phases:
+  pre_build:
+    commands:
+      - echo "Resolving AWS account and image tag"
+      - AWS_REGION=${AWS_REGION:-${AWS_DEFAULT_REGION:-}}
+      - test -n "${AWS_REGION}" || (echo "AWS_REGION or AWS_DEFAULT_REGION must be set" && exit 1)
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION:0:7}
+      - IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
+      - echo "Logging in to Amazon ECR"
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+  build:
+    commands:
+      - echo "Building Docker image ${IMAGE_URI}"
+      - docker build --build-arg APP_VERSION=${IMAGE_TAG} -t ${IMAGE_URI} ./apps/sample_app
+      - docker push ${IMAGE_URI}
+
+  post_build:
+    commands:
+      - echo "Writing image detail artifacts for downstream stages"
+      - printf '{"ImageURI":"%s","ImageTag":"%s"}' "${IMAGE_URI}" "${IMAGE_TAG}" > imageDetail.json
+      - printf 'IMAGE_TAG=%s\nIMAGE_URI=%s\n' "${IMAGE_TAG}" "${IMAGE_URI}" > imageDetail.env
+
+artifacts:
+  files:
+    - imageDetail.json
+    - imageDetail.env
+    - buildspec-deploy.yaml
+    - charts/sample-app/**/*

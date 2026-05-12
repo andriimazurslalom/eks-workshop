@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  namespace: sample-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - name: sample-app
+          image: sample-app-image
+          ports:
+            - containerPort: 8000
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-app-config
+                  key: APP_ENV
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-app-config
+                  key: LOG_LEVEL
+            - name: FEATURE_GREETING
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-app-config
+                  key: FEATURE_GREETING
+            - name: EXTERNAL_API_BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: sample-app-config
+                  key: EXTERNAL_API_BASE_URL
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: sample-app-secrets
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sample-app-secrets
+                  key: JWT_SECRET
+            - name: THIRD_PARTY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sample-app-secrets
+                  key: THIRD_PARTY_API_KEY
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

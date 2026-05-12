@@ -1,0 +1,16 @@
+aws_region   = "eu-central-1"
+admin_cidr   = "198.51.100.24/32"
+cluster_name = "sample-eks-cluster"
+name_prefix  = "sample-eks"
+
+private_subnet_cidrs = ["10.42.11.0/24", "10.42.12.0/24"]
+codebuild_security_group_ids = ["sg-xxxxxxxxxxxxxxxxx"]
+
+node_instance_types = ["t3.medium"]
+desired_size        = 1
+min_size            = 1
+max_size            = 1
+
+tags = {
+  Owner = "your-name"
+}

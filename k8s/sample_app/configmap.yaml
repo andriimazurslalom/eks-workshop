@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sample-app-config
+data:
+  APP_ENV: "dev"
+  LOG_LEVEL: "debug"
+  FEATURE_GREETING: "false"
+  EXTERNAL_API_BASE_URL: "https://api.example.com"

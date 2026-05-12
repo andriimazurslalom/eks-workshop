@@ -1,0 +1,41 @@
+replicaCount: 1
+containerPort: 8000
+
+serviceAccount:
+  create: false
+  name: sample-app
+
+image:
+  repository: sample-app-image-repository
+  tag: "0.5.6"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+config:
+  appEnv: dev
+  logLevel: info
+  featureGreeting: "false"
+  externalApiBaseUrl: "https://api.example.com"
+
+secrets:
+  databaseUrlSecretName: sample-app/database-url
+  jwtSecretName: sample-app/jwt-secret
+  thirdPartyApiKeySecretName: sample-app/third-party-api-key
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 100Mi
+  limits:
+    cpu: 200m
+    memory: 250Mi
+
+ingress:
+  enabled: true
+  scheme: internet-facing
+  targetType: ip
+  inboundCidrs: []
