@@ -111,7 +111,8 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Learn `Kustomize` as an alternative to Helm for environment overlays
 - [x] Add `values-dev.yaml` and `values-prod.yaml`
 - [x] Understand Helm install, upgrade, history, and rollback at a practical level
-- [ ] Add image scanning in CI
+- [x] Add unit tests to the CI pipeline before image build and deployment
+- [x] Add image scanning in CI
 - [x] Add CI/CD to build, push, and deploy automatically
 
 ## 10. Learn deeper Kubernetes behavior after the main flow
@@ -143,3 +144,22 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Add a `charts/` folder for Helm packaging
 - [x] Add an `hpa.yaml` template to the Helm chart
 - [x] Add deployment documentation for the sample app
+
+## 13. Learn release engineering and platform operations next
+
+- [ ] Learn SemVer for application releases, image tags, and Helm charts
+- [ ] Distinguish Helm chart `version` from `appVersion`
+- [ ] Add centralized logging for the application and cluster
+- [ ] Learn Prometheus metrics collection for Kubernetes workloads
+- [ ] Add Grafana dashboards for cluster and application visibility
+- [ ] Add alerting for application health and Kubernetes resource issues
+- [ ] Learn GitOps with Argo CD or Flux after the imperative pipeline flow is clear
+- [ ] Learn policy as code with Kyverno or OPA/Gatekeeper
+- [ ] Learn Kubernetes `NetworkPolicy` and restrict east-west traffic intentionally
+- [ ] Learn progressive delivery patterns such as canary or blue-green deployments
+- [ ] Learn SBOM generation and artifact provenance basics
+- [ ] Learn image signing and verification concepts
+- [ ] Compare secrets delivery patterns such as IRSA runtime fetch, External Secrets Operator, and CSI-based mounts
+- [ ] Learn cluster autoscaling beyond HPA, including node-level scaling behavior
+- [ ] Learn backup and disaster recovery patterns for Kubernetes workloads
+- [ ] Learn multi-environment promotion workflows across dev, stage, and prod
