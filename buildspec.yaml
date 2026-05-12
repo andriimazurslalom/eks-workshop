@@ -27,6 +27,8 @@ phases:
   build:
     commands:
     - echo "Installing app dependencies for tests"
+    - python --version || python3 --version
+    - python -m pip --version || python3 -m pip --version
     - python -m pip install --upgrade pip
     - pip install -r apps/sample_app/requirements.txt
     - echo "Running unit tests"
