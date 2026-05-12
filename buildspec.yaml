@@ -27,12 +27,10 @@ phases:
   build:
     commands:
     - echo "Installing app dependencies for tests"
-    - python --version || python3 --version
-    - python -m pip --version || python3 -m pip --version
-    - python -m pip install --upgrade pip
-    - pip install -r apps/sample_app/requirements.txt
-    - echo "Running unit tests"
-    - pytest apps/sample_app/tests
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install -e "apps/sample_app[test]"
+    - python3 -m pytest apps/sample_app/tests
+
     - echo "Building Docker image ${IMAGE_URI}"
     - docker build --build-arg APP_VERSION=${IMAGE_TAG} -t ${IMAGE_URI} ./apps/sample_app
     - echo "Scanning image with Trivy"

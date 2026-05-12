@@ -8,10 +8,11 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=8000
 ENV APP_VERSION=${APP_VERSION}
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
+COPY pyproject.toml ./
 COPY app ./app
+
+RUN python -m pip install --upgrade pip \
+    && python -m pip install .
 
 EXPOSE 8000
 
