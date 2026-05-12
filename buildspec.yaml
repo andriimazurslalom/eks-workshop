@@ -26,11 +26,17 @@ phases:
 
   build:
     commands:
+    - echo "Installing app dependencies for tests"
+    - python -m pip install --upgrade pip
+    - pip install -r apps/sample_app/requirements.txt
+    - echo "Running unit tests"
+    - pytest apps/sample_app/tests
     - echo "Building Docker image ${IMAGE_URI}"
     - docker build --build-arg APP_VERSION=${IMAGE_TAG} -t ${IMAGE_URI} ./apps/sample_app
     - echo "Scanning image with Trivy"
     - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format json --output trivy-report.json --exit-code 0 ${IMAGE_URI}
     - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format sarif --output trivy-report.sarif ${IMAGE_URI}
+    - trivy image --severity CRITICAL --ignore-unfixed --exit-code 1 ${IMAGE_URI}
     - docker push ${IMAGE_URI}
 
   post_build:
