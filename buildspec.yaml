@@ -13,6 +13,8 @@ phases:
     commands:
     - echo "Installing Trivy"
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+    - echo "Installing Helm"
+    - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
   pre_build:
     commands:
     - echo "Resolving AWS account and image tag"
@@ -32,6 +34,14 @@ phases:
 
     - echo "Running lint checks"
     - python3 -m ruff check apps/sample_app/app apps/sample_app/tests
+
+    - echo "Running Helm lint"
+    - helm lint charts/sample-app
+
+    - echo "Rendering Helm templates"
+    - helm template sample-app charts/sample-app -f charts/sample-app/values-dev.yaml > rendered-manifests.yaml
+
+    - echo "Running unit tests"
     - python3 -m pytest apps/sample_app/tests
 
     - echo "Building Docker image ${IMAGE_URI}"
@@ -56,3 +66,4 @@ artifacts:
   - trivy-report.sarif
   - buildspec-deploy.yaml
   - charts/sample-app/**/*
+  - rendered-manifests.yaml

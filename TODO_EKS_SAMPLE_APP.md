@@ -146,9 +146,9 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Add deployment documentation for the sample app
 
 ## 13. Learn release engineering and platform operations next
-- [ ] Add Python linting to CI with `ruff` or a similar tool
-- [ ] Add `helm lint` to the CI pipeline
-- [ ] Add `helm template` rendering checks to the CI pipeline
+- [x] Add Python linting to CI with `ruff` or a similar tool
+- [x] Add `helm lint` to the CI pipeline
+- [x] Add `helm template` rendering checks to the CI pipeline
 - [ ] Add a post-deploy smoke test against the live application endpoint
 - [ ] Add secret scanning to the CI pipeline
 - [ ] Learn SemVer for application releases, image tags, and Helm charts
