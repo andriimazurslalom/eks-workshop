@@ -9,7 +9,8 @@ from app.utils import secret_is_configured
 app = FastAPI(
     title="Sample Backend App for EKS",
     version=os.getenv("APP_VERSION", "not found"),
-    description="A minimal FastAPI service for local development and future EKS deployment with yaml or helm.",
+    description="A minimal FastAPI service for local development and "
+                "future EKS deployment with yaml or helm.",
 )
 
 

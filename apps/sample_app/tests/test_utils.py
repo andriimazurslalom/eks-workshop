@@ -1,5 +1,6 @@
-from app import utils
 from botocore.exceptions import ClientError
+
+from app import utils
 
 
 def test_get_secret_uses_local_fallback_when_env_var_missing(monkeypatch):

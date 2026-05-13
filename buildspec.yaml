@@ -29,6 +29,9 @@ phases:
     - echo "Installing app dependencies for tests"
     - python3 -m pip install --upgrade pip
     - python3 -m pip install -e "apps/sample_app[test]"
+
+    - echo "Running lint checks"
+    - python3 -m ruff check apps/sample_app/app apps/sample_app/tests
     - python3 -m pytest apps/sample_app/tests
 
     - echo "Building Docker image ${IMAGE_URI}"

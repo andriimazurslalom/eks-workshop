@@ -23,7 +23,8 @@ def get_secret(secret_name_env_var: str, local_fallback: str = None) -> str:
     if not secret_name:
         if local_fallback is not None:
             print(
-                f"Warning: Environment variable '{secret_name_env_var}' not set. Using local fallback."
+                f"Warning: Environment variable '{secret_name_env_var}' not set. "
+                f"Using local fallback."
             )
             return local_fallback
         raise ValueError(f"Environment variable '{secret_name_env_var}' not set")
@@ -45,7 +46,8 @@ def get_secret(secret_name_env_var: str, local_fallback: str = None) -> str:
         # Fallback for local development
         if local_fallback is not None:
             print(
-                f"Warning: Failed to fetch secret '{secret_name}' from AWS. Using local fallback."
+                f"Warning: Failed to fetch secret '{secret_name}' from AWS."
+                f"Using local fallback."
             )
             return local_fallback
         else:
