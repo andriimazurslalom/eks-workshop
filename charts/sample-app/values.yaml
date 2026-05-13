@@ -5,6 +5,9 @@ serviceAccount:
   create: false
   name: sample-app
 
+monitoring:
+  enabled: true
+
 image:
   repository: sample-app-image-repository
   tag: "0.5.6"

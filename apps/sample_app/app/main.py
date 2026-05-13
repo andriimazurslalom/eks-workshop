@@ -3,6 +3,7 @@ import socket
 import time
 
 from fastapi import FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.utils import secret_is_configured
 
@@ -10,8 +11,10 @@ app = FastAPI(
     title="Sample Backend App for EKS",
     version=os.getenv("APP_VERSION", "not found"),
     description="A minimal FastAPI service for local development and "
-                "future EKS deployment with yaml or helm.",
+    "future EKS deployment with yaml or helm.",
 )
+
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 
 SAMPLE_ITEMS = [
