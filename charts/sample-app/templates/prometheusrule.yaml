@@ -1,0 +1,20 @@
+{{- if .Values.monitoring.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ include "sample-app.fullname" . }}
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: sample-app.rules
+      rules:
+        - alert: SampleAppPodsUnavailable
+          expr: 'kube_deployment_status_replicas_unavailable{deployment="{{ include "sample-app.fullname" . }}",namespace="{{ .Release.Namespace }}"} > 0'
+          for: 2m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Sample app has unavailable replicas"
+            description: 'Deployment {{ include "sample-app.fullname" . }} has unavailable replicas in namespace {{ .Release.Namespace }}.'
+{{- end }}

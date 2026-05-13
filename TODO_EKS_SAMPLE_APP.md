@@ -127,7 +127,7 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Learn how a HorizontalPodAutoscaler works
 - [x] Learn how a PodDisruptionBudget protects availability during voluntary disruptions
 - [x] Create an operator runbook/checklist for monitoring and first-response debugging
-- [ ] Add monitoring and alerting tooling later
+- [x] Add monitoring and alerting tooling later
 
 ## 11. Learn AWS-specific platform topics later
 
@@ -154,9 +154,9 @@ This is the core dev flow for shipping a backend to EKS:
 - [ ] Learn SemVer for application releases, image tags, and Helm charts
 - [ ] Distinguish Helm chart `version` from `appVersion`
 - [ ] Add centralized logging for the application and cluster
-- [ ] Learn Prometheus metrics collection for Kubernetes workloads
+- [x] Learn Prometheus metrics collection for Kubernetes workloads
 - [ ] Add Grafana dashboards for cluster and application visibility
-- [ ] Add alerting for application health and Kubernetes resource issues
+- [x] Add alerting for application health and Kubernetes resource issues
 - [ ] Learn GitOps with Argo CD or Flux after the imperative pipeline flow is clear
 - [ ] Learn policy as code with Kyverno or OPA/Gatekeeper
 - [ ] Learn Kubernetes `NetworkPolicy` and restrict east-west traffic intentionally
