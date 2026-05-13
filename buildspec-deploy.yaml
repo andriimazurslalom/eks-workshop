@@ -36,3 +36,12 @@ phases:
             - echo "Deployment complete"
             - kubectl get pods -n ${NAMESPACE}
             - kubectl get svc -n ${NAMESPACE}
+
+            - echo "Running post-deploy smoke test"
+            - kubectl --kubeconfig ${KUBECONFIG} rollout status deployment/${RELEASE_NAME} -n ${NAMESPACE}
+            - kubectl --kubeconfig ${KUBECONFIG} get endpoints ${RELEASE_NAME} -n ${NAMESPACE}
+            - kubectl --kubeconfig ${KUBECONFIG} port-forward svc/${RELEASE_NAME} 18080:80 -n ${NAMESPACE} >/tmp/port-forward.log 2>&1 &
+            - PF_PID=$!
+            - sleep 5
+            - curl -fsS http://127.0.0.1:18080/health
+            - kill ${PF_PID}
