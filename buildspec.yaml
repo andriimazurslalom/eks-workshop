@@ -13,8 +13,15 @@ phases:
     commands:
     - echo "Installing Trivy"
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
     - echo "Installing Helm"
     - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+    - echo "Installing Gitleaks"
+    - curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.28.0/gitleaks_8.28.0_linux_x64.tar.gz -o /tmp/gitleaks.tar.gz
+    - tar -xzf /tmp/gitleaks.tar.gz -C /tmp
+    - install /tmp/gitleaks /usr/local/bin/gitleaks
+
   pre_build:
     commands:
     - echo "Resolving AWS account and image tag"
@@ -23,6 +30,7 @@ phases:
     - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
     - IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION:0:7}
     - IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
+
     - echo "Logging in to Amazon ECR"
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
@@ -31,6 +39,9 @@ phases:
     - echo "Installing app dependencies for tests"
     - python3 -m pip install --upgrade pip
     - python3 -m pip install -e "apps/sample_app[test]"
+
+    - echo "Running secret scan"
+    - gitleaks detect --source . --no-git --redact --report-format json --report-path gitleaks-report.json
 
     - echo "Running lint checks"
     - python3 -m ruff check apps/sample_app/app apps/sample_app/tests
@@ -67,3 +78,4 @@ artifacts:
   - buildspec-deploy.yaml
   - charts/sample-app/**/*
   - rendered-manifests.yaml
+  - gitleaks-report.json
