@@ -2,9 +2,9 @@ version: 0.2
 
 env:
   exported-variables:
-  - IMAGE_TAG
-  - IMAGE_URI
-  - APP_VERSION
+    - IMAGE_TAG
+    - IMAGE_URI
+    - APP_VERSION
   variables:
     IMAGE_REPO_NAME: sample-app
     CONTAINER_NAME: sample-app
@@ -12,80 +12,80 @@ env:
 phases:
   install:
     commands:
-    - echo "Installing Make"
-    - apt-get update && apt-get install -y make
+      - echo "Installing Make"
+      - yum install -y make
 
-    - echo "Installing Trivy"
-    - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+      - echo "Installing Trivy"
+      - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
-    - echo "Installing Helm"
-    - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      - echo "Installing Helm"
+      - curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-    - echo "Installing Gitleaks"
-    - curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.28.0/gitleaks_8.28.0_linux_x64.tar.gz -o /tmp/gitleaks.tar.gz
-    - tar -xzf /tmp/gitleaks.tar.gz -C /tmp
-    - install /tmp/gitleaks /usr/local/bin/gitleaks
+      - echo "Installing Gitleaks"
+      - curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.28.0/gitleaks_8.28.0_linux_x64.tar.gz -o /tmp/gitleaks.tar.gz
+      - tar -xzf /tmp/gitleaks.tar.gz -C /tmp
+      - install /tmp/gitleaks /usr/local/bin/gitleaks
 
   pre_build:
     commands:
-    - echo "Resolving AWS account and image tag"
-    - AWS_REGION=${AWS_REGION:-${AWS_DEFAULT_REGION:-}}
-    - test -n "${AWS_REGION}" || (echo "AWS_REGION or AWS_DEFAULT_REGION must be set" && exit 1)
-    - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - echo "Resolving AWS account and image tag"
+      - AWS_REGION=${AWS_REGION:-${AWS_DEFAULT_REGION:-}}
+      - test -n "${AWS_REGION}" || (echo "AWS_REGION or AWS_DEFAULT_REGION must be set" && exit 1)
+      - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
-    - APP_VERSION=$(python3 -c 'import tomllib; print(tomllib.load(open("apps/sample_app/pyproject.toml","rb"))["project"]["version"])')
-    - GIT_SHA=${CODEBUILD_RESOLVED_SOURCE_VERSION:0:7}
-    - IMAGE_TAG=${APP_VERSION}-${GIT_SHA}
-    - IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
+      - APP_VERSION=$(python3 -c 'import tomllib; print(tomllib.load(open("apps/sample_app/pyproject.toml","rb"))["project"]["version"])')
+      - GIT_SHA=${CODEBUILD_RESOLVED_SOURCE_VERSION:0:7}
+      - IMAGE_TAG=${APP_VERSION}-${GIT_SHA}
+      - IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
 
-    - echo "Logging in to Amazon ECR"
-    - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      - echo "Logging in to Amazon ECR"
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
   build:
     commands:
-    - echo "Installing app dependencies for tests"
-    - python3 -m pip install --upgrade pip
-    - python3 -m pip install -e "apps/sample_app[test]"
+      - echo "Installing app dependencies for tests"
+      - python3 -m pip install --upgrade pip
+      - python3 -m pip install -e "apps/sample_app[test]"
 
-    - echo "Running secret scan"
-    - gitleaks detect --source . --no-git --redact --report-format json --report-path gitleaks-report.json
+      - echo "Running secret scan"
+      - gitleaks detect --source . --no-git --redact --report-format json --report-path gitleaks-report.json
 
-    - echo "Running lint checks"
-    - python3 -m ruff check apps/sample_app/app apps/sample_app/tests
+      - echo "Running lint checks"
+      - python3 -m ruff check apps/sample_app/app apps/sample_app/tests
 
-    - echo "Checking chart appVersion drift"
-    - make check-chart-app-version
+      - echo "Checking chart appVersion drift"
+      - make check-chart-app-version
 
-    - echo "Running Helm lint"
-    - helm lint charts/sample-app
+      - echo "Running Helm lint"
+      - helm lint charts/sample-app
 
-    - echo "Rendering Helm templates"
-    - helm template sample-app charts/sample-app -f charts/sample-app/values-dev.yaml > rendered-manifests.yaml
+      - echo "Rendering Helm templates"
+      - helm template sample-app charts/sample-app -f charts/sample-app/values-dev.yaml > rendered-manifests.yaml
 
-    - echo "Running unit tests"
-    - python3 -m pytest apps/sample_app/tests
+      - echo "Running unit tests"
+      - python3 -m pytest apps/sample_app/tests
 
-    - echo "Building Docker image ${IMAGE_URI}"
-    - docker build --build-arg APP_VERSION=${APP_VERSION} -t ${IMAGE_URI} ./apps/sample_app
-    - echo "Scanning image with Trivy"
-    - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format json --output trivy-report.json --exit-code 0 ${IMAGE_URI}
-    - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format sarif --output trivy-report.sarif ${IMAGE_URI}
-    - trivy image --severity CRITICAL --ignore-unfixed --exit-code 1 ${IMAGE_URI}
-    - docker push ${IMAGE_URI}
+      - echo "Building Docker image ${IMAGE_URI}"
+      - docker build --build-arg APP_VERSION=${APP_VERSION} -t ${IMAGE_URI} ./apps/sample_app
+      - echo "Scanning image with Trivy"
+      - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format json --output trivy-report.json --exit-code 0 ${IMAGE_URI}
+      - trivy image --severity HIGH,CRITICAL --ignore-unfixed --format sarif --output trivy-report.sarif ${IMAGE_URI}
+      - trivy image --severity CRITICAL --ignore-unfixed --exit-code 1 ${IMAGE_URI}
+      - docker push ${IMAGE_URI}
 
   post_build:
     commands:
-    - echo "Writing image detail artifacts for downstream stages"
-    - printf '{"ImageURI":"%s","ImageTag":"%s"}' "${IMAGE_URI}" "${IMAGE_TAG}" > imageDetail.json
-    - printf 'APP_VERSION=%s\nIMAGE_TAG=%s\nIMAGE_URI=%s\n' "${APP_VERSION}" "${IMAGE_TAG}" "${IMAGE_URI}" > imageDetail.env
+      - echo "Writing image detail artifacts for downstream stages"
+      - printf '{"ImageURI":"%s","ImageTag":"%s"}' "${IMAGE_URI}" "${IMAGE_TAG}" > imageDetail.json
+      - printf 'APP_VERSION=%s\nIMAGE_TAG=%s\nIMAGE_URI=%s\n' "${APP_VERSION}" "${IMAGE_TAG}" "${IMAGE_URI}" > imageDetail.env
 
 artifacts:
   files:
-  - imageDetail.json
-  - imageDetail.env
-  - trivy-report.json
-  - trivy-report.sarif
-  - buildspec-deploy.yaml
-  - charts/sample-app/**/*
-  - rendered-manifests.yaml
-  - gitleaks-report.json
+    - imageDetail.json
+    - imageDetail.env
+    - trivy-report.json
+    - trivy-report.sarif
+    - buildspec-deploy.yaml
+    - charts/sample-app/**/*
+    - rendered-manifests.yaml
+    - gitleaks-report.json
