@@ -40,3 +40,11 @@ def test_get_item_returns_404_for_unknown_item():
     response = client.get("/api/v1/items/999")
     assert response.status_code == 404
     assert response.json()["detail"] == "Item 999 not found"
+
+
+def test_version_returns_app_version(monkeypatch):
+    monkeypatch.setenv("APP_VERSION", "0.2.0")
+
+    response = client.get("/version")
+    assert response.status_code == 200
+    assert response.json() == {"app_version": "0.2.0"}
