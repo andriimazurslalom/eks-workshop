@@ -32,3 +32,18 @@ output "private_subnet_ids" {
   description = "Private subnets available for NAT-backed VPC workloads."
   value       = module.network.private_subnet_ids
 }
+
+output "oidc_provider_arn" {
+  description = "IAM OIDC provider ARN for IRSA."
+  value       = module.eks.oidc_provider_arn
+}
+
+output "oidc_issuer_url" {
+  description = "EKS OIDC issuer URL."
+  value       = module.eks.oidc_issuer_url
+}
+
+output "fluent_bit_role_arn" {
+  description = "IAM role ARN for Fluent Bit IRSA."
+  value       = aws_iam_role.fluent_bit.arn
+}

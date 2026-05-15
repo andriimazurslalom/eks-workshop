@@ -151,9 +151,10 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Add `helm template` rendering checks to the CI pipeline
 - [x] Add a post-deploy smoke test against the live application endpoint
 - [x] Add secret scanning to the CI pipeline
-- [ ] Learn SemVer for application releases, image tags, and Helm charts
-- [ ] Distinguish Helm chart `version` from `appVersion`
-- [ ] Add centralized logging for the application and cluster
+- [x] Learn SemVer for application releases, image tags, and Helm charts
+- [x] Distinguish Helm chart `version` from `appVersion`
+- [ ] Learn Conventional Commits and release automation workflows
+- [x] Add centralized logging for the application and cluster
 - [x] Learn Prometheus metrics collection for Kubernetes workloads
 - [ ] Add Grafana dashboards for cluster and application visibility
 - [x] Add alerting for application health and Kubernetes resource issues

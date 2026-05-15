@@ -52,6 +52,20 @@ resource "aws_eks_cluster" "this" {
   tags = local.merged_tags
 }
 
+data "tls_certificate" "oidc" {
+  url = aws_eks_cluster.this.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "this" {
+  url             = aws_eks_cluster.this.identity[0].oidc[0].issuer
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.oidc.certificates[0].sha1_fingerprint]
+
+  tags = local.merged_tags
+}
+
+
+
 resource "aws_security_group_rule" "codebuild_to_cluster_https" {
   for_each = toset(var.codebuild_security_group_ids)
 
@@ -135,8 +149,8 @@ resource "aws_eks_node_group" "this" {
 }
 
 resource "aws_eks_addon" "vpc_cni" {
-  cluster_name  = aws_eks_cluster.this.name
-  addon_name    = "vpc-cni"
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "vpc-cni"
   resolve_conflicts_on_create = "OVERWRITE"
 
   depends_on = [aws_eks_node_group.this]
@@ -145,8 +159,8 @@ resource "aws_eks_addon" "vpc_cni" {
 }
 
 resource "aws_eks_addon" "coredns" {
-  cluster_name  = aws_eks_cluster.this.name
-  addon_name    = "coredns"
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "coredns"
   resolve_conflicts_on_create = "OVERWRITE"
 
   depends_on = [aws_eks_node_group.this]
@@ -155,8 +169,8 @@ resource "aws_eks_addon" "coredns" {
 }
 
 resource "aws_eks_addon" "kube_proxy" {
-  cluster_name  = aws_eks_cluster.this.name
-  addon_name    = "kube-proxy"
+  cluster_name                = aws_eks_cluster.this.name
+  addon_name                  = "kube-proxy"
   resolve_conflicts_on_create = "OVERWRITE"
 
   depends_on = [aws_eks_node_group.this]

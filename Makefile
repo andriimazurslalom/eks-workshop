@@ -1,5 +1,5 @@
 
-.PHONY: sync-chart-app-version check-chart-app-version
+.PHONY: sync-chart-app-version check-chart-app-version aws-credentials
 
 sync-chart-app-version:
 	@APP_VERSION=$$(grep '^version' apps/sample_app/pyproject.toml | head -1 | sed -E 's/version\s*=\s*"([^"]+)".*/\1/'); \
@@ -15,3 +15,9 @@ check-chart-app-version:
 		exit 1; \
 	fi; \
 	echo "Chart appVersion matches pyproject version: $$APP_VERSION"
+
+aws-credentials:
+	unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_PROFILE AWS_DEFAULT_PROFILE
+	eval "$(aws configure export-credentials --format env)"
+
+
