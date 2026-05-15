@@ -104,3 +104,8 @@ def burn_cpu(seconds: int = 5) -> dict[str, object]:
         "seconds": seconds,
         "value": value,
     }
+
+
+@app.get("/version")
+def version() -> dict[str, str]:
+    return {"app_version": get_app_version()}
