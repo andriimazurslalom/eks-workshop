@@ -5,7 +5,7 @@ import time
 from fastapi import FastAPI, HTTPException
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.utils import secret_is_configured, get_app_version
+from app.utils import get_app_version, secret_is_configured
 
 app = FastAPI(
     title="Sample Backend App for EKS",

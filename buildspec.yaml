@@ -71,7 +71,8 @@ phases:
     commands:
     - echo "Writing image detail artifacts for downstream stages"
     - printf '{"ImageURI":"%s","ImageTag":"%s"}' "${IMAGE_URI}" "${IMAGE_TAG}" > imageDetail.json
-    - printf 'IMAGE_TAG=%s\nIMAGE_URI=%s\n' "${IMAGE_TAG}" "${IMAGE_URI}" > imageDetail.env
+    - printf 'APP_VERSION=%s\nIMAGE_TAG=%s\nIMAGE_URI=%s\n' "${APP_VERSION}" "${IMAGE_TAG}" "${IMAGE_URI}" > imageDetail.env
+
 
 artifacts:
   files:

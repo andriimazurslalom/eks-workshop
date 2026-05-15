@@ -6,7 +6,7 @@ ECR_REPO := $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(APP_NAME)
 LOCAL_PORT ?= 8000
 K8S_SERVICE_PORT ?= 80
 
-.PHONY: build run build-run ecr-login tag push push-latest deploy port-forward
+.PHONY: format lint test check build run build-run ecr-login tag push push-latest deploy port-forward
 
 build:
 	docker build \
@@ -44,3 +44,14 @@ deploy: build push
 
 port-forward:
 	kubectl port-forward -n sample-app svc/$(APP_NAME) $(LOCAL_PORT):$(K8S_SERVICE_PORT)
+
+format:
+	python3 -m ruff format app tests
+
+lint:
+	python3 -m ruff check app tests
+
+test:
+	python3 -m pytest tests
+
+check: lint test
