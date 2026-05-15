@@ -28,6 +28,14 @@ The main goal is to answer a practical question:
 - [TODO_EKS_SAMPLE_APP.md](TODO_EKS_SAMPLE_APP.md) tracks the learning path and completed topics
 - [RUNBOOK_SAMPLE_APP_EKS.md](RUNBOOK_SAMPLE_APP_EKS.md) is the operational runbook for the app on EKS
 
+## Commit style:
+- feat: new capability
+- fix: bug fix
+- docs: documentation-only change
+- refactor: code cleanup without behavior change
+- test: test-only change
+- chore: tooling/config/maintenance
+
 ## How the repo evolved
 
 The repo did not start with the full platform shape.
