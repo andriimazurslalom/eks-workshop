@@ -12,6 +12,9 @@ env:
 phases:
   install:
     commands:
+    - echo "Installing Make"
+    - apt-get update && apt-get install -y make
+
     - echo "Installing Trivy"
     - curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
 
@@ -50,6 +53,9 @@ phases:
     - echo "Running lint checks"
     - python3 -m ruff check apps/sample_app/app apps/sample_app/tests
 
+    - echo "Checking chart appVersion drift"
+    - make check-chart-app-version
+
     - echo "Running Helm lint"
     - helm lint charts/sample-app
 
@@ -72,7 +78,6 @@ phases:
     - echo "Writing image detail artifacts for downstream stages"
     - printf '{"ImageURI":"%s","ImageTag":"%s"}' "${IMAGE_URI}" "${IMAGE_TAG}" > imageDetail.json
     - printf 'APP_VERSION=%s\nIMAGE_TAG=%s\nIMAGE_URI=%s\n' "${APP_VERSION}" "${IMAGE_TAG}" "${IMAGE_URI}" > imageDetail.env
-
 
 artifacts:
   files:
