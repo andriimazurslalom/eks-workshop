@@ -58,3 +58,38 @@ def test_secret_is_configured_returns_false_on_client_error(monkeypatch):
     monkeypatch.setattr(utils.boto3, "client", lambda service, **kwargs: FakeClient())
 
     assert utils.secret_is_configured("THIRD_PARTY_API_KEY_SECRET_NAME") is False
+
+
+def test_get_app_version_uses_env_var_when_present(monkeypatch):
+    monkeypatch.setenv("APP_VERSION", "0.2.0")
+
+    value = utils.get_app_version()
+
+    assert value == "0.2.0"
+
+
+def test_get_app_version_falls_back_to_package_metadata(monkeypatch):
+    monkeypatch.delenv("APP_VERSION", raising=False)
+
+    def fake_version(package_name):
+        assert package_name == "sample-app"
+        return "0.2.0"
+
+    monkeypatch.setattr(utils, "version", fake_version)
+
+    value = utils.get_app_version()
+
+    assert value == "0.2.0"
+
+
+def test_get_app_version_returns_unknown_when_package_metadata_missing(monkeypatch):
+    monkeypatch.delenv("APP_VERSION", raising=False)
+
+    def raise_package_not_found(package_name):
+        raise utils.PackageNotFoundError
+
+    monkeypatch.setattr(utils, "version", raise_package_not_found)
+
+    value = utils.get_app_version()
+
+    assert value == "unknown"

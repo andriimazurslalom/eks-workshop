@@ -1,19 +1,25 @@
 APP_NAME := sample-app
-APP_VERSION ?= 0.2.3
+APP_VERSION := $(shell python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')
 AWS_REGION ?= $(shell aws configure get region 2>/dev/null)
 AWS_ACCOUNT_ID := $(shell aws sts get-caller-identity --query Account --output text)
 ECR_REPO := $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(APP_NAME)
 LOCAL_PORT ?= 8000
 K8S_SERVICE_PORT ?= 80
 
-.PHONY: build run ecr-login tag push push-latest deploy port-forward
+.PHONY: build run build-run ecr-login tag push push-latest deploy port-forward
 
 build:
 	docker build \
 	--build-arg APP_VERSION=$(APP_VERSION) \
 	-t $(APP_NAME):$(APP_VERSION) .
 
-run: build
+run:
+	docker run --rm \
+	-p $(LOCAL_PORT):8000 \
+	-e APP_VERSION=$(APP_VERSION) \
+	$(APP_NAME):$(APP_VERSION)
+
+build-run: build
 	docker run --rm \
 	-p $(LOCAL_PORT):8000 \
 	-e APP_VERSION=$(APP_VERSION) \

@@ -5,11 +5,11 @@ import time
 from fastapi import FastAPI, HTTPException
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.utils import secret_is_configured
+from app.utils import secret_is_configured, get_app_version
 
 app = FastAPI(
     title="Sample Backend App for EKS",
-    version=os.getenv("APP_VERSION", "not found"),
+    version=get_app_version(),
     description="A minimal FastAPI service for local development and "
     "future EKS deployment with yaml or helm.",
 )
@@ -35,7 +35,7 @@ def get_runtime_details() -> dict[str, str]:
     return {
         "hostname": hostname,
         "ip_address": ip_address,
-        "app_version": os.getenv("APP_VERSION", "not found"),
+        "app_version": get_app_version(),
     }
 
 
@@ -82,7 +82,7 @@ def get_runtime_config() -> dict[str, object]:
         "third_party_api_key_configured": secret_is_configured(
             "THIRD_PARTY_API_KEY_SECRET_NAME"
         ),
-        "app_version": os.getenv("APP_VERSION", "unknown"),
+        "app_version": get_app_version(),
     }
 
 

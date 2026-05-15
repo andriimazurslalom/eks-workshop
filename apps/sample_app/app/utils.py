@@ -1,7 +1,19 @@
 import os
+from importlib.metadata import PackageNotFoundError, version
 
 import boto3
 from botocore.exceptions import ClientError
+
+
+def get_app_version() -> str:
+    env_version = os.getenv("APP_VERSION")
+    if env_version:
+        return env_version
+
+    try:
+        return version("sample-app")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def get_secret(secret_name_env_var: str, local_fallback: str = None) -> str:
