@@ -1,12 +1,12 @@
-APP_NAME := sample-app
-APP_VERSION := $(shell python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')
+APP_NAME = sample-app
+APP_VERSION = $(shell python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')
 AWS_REGION ?= $(shell aws configure get region 2>/dev/null)
-AWS_ACCOUNT_ID := $(shell aws sts get-caller-identity --query Account --output text)
-ECR_REPO := $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(APP_NAME)
+AWS_ACCOUNT_ID = $(shell aws sts get-caller-identity --query Account --output text)
+ECR_REPO = $(AWS_ACCOUNT_ID).dkr.ecr.$(AWS_REGION).amazonaws.com/$(APP_NAME)
 LOCAL_PORT ?= 8000
 K8S_SERVICE_PORT ?= 80
 
-.PHONY: format lint test check build run build-run ecr-login tag push push-latest deploy port-forward
+.PHONY: venv install format lint test check build run build-run ecr-login tag push push-latest deploy port-forward
 
 build:
 	docker build \
@@ -45,13 +45,20 @@ deploy: build push
 port-forward:
 	kubectl port-forward -n sample-app svc/$(APP_NAME) $(LOCAL_PORT):$(K8S_SERVICE_PORT)
 
-format:
-	python3 -m ruff format app tests
+venv:
+	python -m venv .venv
+	.venv/bin/pip install -r requirements.txt
 
-lint:
-	python3 -m ruff check app tests
+install:
+	.venv/bin/pip install .
 
-test:
-	python3 -m pytest tests
+format: install
+	.venv/bin/python3 -m ruff format app tests
+
+lint: install
+	.venv/bin/python3 -m ruff check app tests
+
+test: install
+	.venv/bin/python3 -m pytest tests
 
 check: lint test
