@@ -44,6 +44,14 @@ Install hooks with:
 
 ```bash
 make install-git-hooks
+```
+
+## Release Flow
+
+1. `make release-patch` or `make release-minor`
+2. commit the version bump
+3. `make tag-release`
+4. `make release-notes`
 
 ## How the repo evolved
 
