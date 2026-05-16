@@ -29,12 +29,21 @@ The main goal is to answer a practical question:
 - [RUNBOOK_SAMPLE_APP_EKS.md](RUNBOOK_SAMPLE_APP_EKS.md) is the operational runbook for the app on EKS
 
 ## Commit style:
+
+This repo uses Conventional Commits for local commit linting.
+
+Allowed commit types:
 - feat: new capability
 - fix: bug fix
 - docs: documentation-only change
 - refactor: code cleanup without behavior change
 - test: test-only change
 - chore: tooling/config/maintenance
+
+Install hooks with:
+
+```bash
+make install-git-hooks
 
 ## How the repo evolved
 

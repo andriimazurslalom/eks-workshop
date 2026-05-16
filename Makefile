@@ -1,5 +1,5 @@
 
-.PHONY: sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release install-git-hooks
+.PHONY: sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release install-git-hooks release-notes
 
 install-git-hooks:
 	git config core.hooksPath .githooks
@@ -51,3 +51,6 @@ tag-release:
 	fi; \
 	git tag -a "$$TAG" -m "Release $$TAG"; \
 	echo "Created annotated tag $$TAG"
+
+release-notes:
+	python3 scripts/generate_release_notes.py
