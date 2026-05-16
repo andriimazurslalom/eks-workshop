@@ -1,5 +1,11 @@
 
-.PHONY: sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release
+.PHONY: sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release install-git-hooks
+
+install-git-hooks:
+	git config core.hooksPath .githooks
+	chmod +x .githooks/commit-msg
+	chmod +x scripts/lint_commit_msg.py
+
 
 sync-chart-app-version:
 	@APP_VERSION=$$(grep '^version' apps/sample_app/pyproject.toml | head -1 | sed -E 's/version\s*=\s*"([^"]+)".*/\1/'); \

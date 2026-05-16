@@ -153,7 +153,13 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Add secret scanning to the CI pipeline
 - [x] Learn SemVer for application releases, image tags, and Helm charts
 - [x] Distinguish Helm chart `version` from `appVersion`
-- [ ] Learn Conventional Commits and release automation workflows
+- [x] Learn Conventional Commits and release automation workflows
+- [x] Add manual release bump targets for patch and minor versions
+- [x] Add annotated git release tags tied to app versions
+- [ ] Add commit message linting for Conventional Commits
+- [ ] Evaluate adopting the `pre-commit` framework for local hook management
+- [ ] Generate changelog or release notes from commit history
+- [ ] Evaluate fuller release automation tooling after the manual workflow is clear
 - [x] Add centralized logging for the application and cluster
 - [x] Learn Prometheus metrics collection for Kubernetes workloads
 - [ ] Add Grafana dashboards for cluster and application visibility
