@@ -50,7 +50,7 @@ make install-git-hooks
 
 1. `make release-patch` or `make release-minor`
 2. commit the version bump
-3. `make tag-release`
+3. `make publish-release-tag`
 4. `make release-notes`
 
 ## How the repo evolved
