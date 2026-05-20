@@ -159,7 +159,7 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Add commit message linting for Conventional Commits
 - [ ] Evaluate adopting the `pre-commit` framework for local hook management
 - [x] Generate changelog or release notes from commit history
-- [ ] Evaluate fuller release automation tooling after the manual workflow is clear
+- [x] Evaluate fuller release automation tooling after the manual workflow is clear
 - [x] Add centralized logging for the application and cluster
 - [x] Learn Prometheus metrics collection for Kubernetes workloads
 - [ ] Add Grafana dashboards for cluster and application visibility
