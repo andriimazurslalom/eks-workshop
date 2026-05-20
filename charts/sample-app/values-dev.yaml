@@ -7,3 +7,8 @@ config:
   appEnv: dev
   logLevel: debug
 
+ingress:
+  tls:
+    - secretName: sample-app-selfsigned-tls
+      hosts:
+        - sample-app.local

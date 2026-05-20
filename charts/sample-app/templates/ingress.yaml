@@ -11,6 +11,10 @@ metadata:
     alb.ingress.kubernetes.io/inbound-cidrs: {{ join "," .Values.ingress.inboundCidrs | quote }}
 {{- end }}
 spec:
+{{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+{{- end }}
   rules:
     - http:
         paths:

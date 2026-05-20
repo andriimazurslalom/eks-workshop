@@ -42,3 +42,4 @@ ingress:
   scheme: internet-facing
   targetType: ip
   inboundCidrs: []
+  tls: []
