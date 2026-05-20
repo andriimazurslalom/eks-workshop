@@ -48,3 +48,9 @@ def test_version_returns_app_version(monkeypatch):
     response = client.get("/version")
     assert response.status_code == 200
     assert response.json() == {"app_version": "0.2.0"}
+
+
+def test_get_item_count_returns_total():
+    response = client.get("/api/v1/items/count")
+    assert response.status_code == 200
+    assert response.json() == {"count": 3}
