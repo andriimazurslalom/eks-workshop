@@ -1,0 +1,15 @@
+{
+  "packages": {
+    "apps/sample_app": {
+      "release-type": "python",
+      "include-component-in-tag": false,
+      "extra-files": [
+        {
+          "type": "yaml",
+          "path": "charts/sample-app/Chart.yaml",
+          "jsonpath": "$.appVersion"
+        }
+      ]
+    }
+  }
+}

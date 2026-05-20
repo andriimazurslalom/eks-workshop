@@ -53,6 +53,14 @@ make install-git-hooks
 3. `make publish-release-tag`
 4. `make release-notes`
 
+
+## Release Automation
+
+This repo uses Conventional Commits and Release Please for release automation.
+
+Release Please watches commits merged into `main`, opens a release PR with the next version bump and changelog updates, and creates the Git tag and GitHub release after that PR is merged.
+
+
 ## How the repo evolved
 
 The repo did not start with the full platform shape.
