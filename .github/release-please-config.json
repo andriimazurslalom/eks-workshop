@@ -1,9 +1,14 @@
 {
   "packages": {
-    "apps/sample_app": {
-      "release-type": "python",
+    ".": {
+      "release-type": "simple",
       "include-component-in-tag": false,
       "extra-files": [
+        {
+          "type": "toml",
+          "path": "apps/sample_app/pyproject.toml",
+          "jsonpath": "$.project.version"
+        },
         {
           "type": "yaml",
           "path": "charts/sample-app/Chart.yaml",
