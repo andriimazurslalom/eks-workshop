@@ -8,7 +8,7 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from app.utils import get_app_version, secret_is_configured
 
 app = FastAPI(
-    title="Sample Backend App for EKS",
+    title="Sample Backend App for EKS with GitOps Flow",
     version=get_app_version(),
     description="A minimal FastAPI service for local development and "
     "future EKS deployment with yaml or helm.",
