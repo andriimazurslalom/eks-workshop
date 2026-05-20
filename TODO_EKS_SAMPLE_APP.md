@@ -134,7 +134,7 @@ This is the core dev flow for shipping a backend to EKS:
 - [x] Add AWS Load Balancer Controller when moving to ingress-based routing
 - [x] Learn IRSA when Pods need AWS API access
 - [x] Migrate application runtime secrets to AWS Secrets Manager and fetch them from Pods via IRSA
-- [ ] Add `cert-manager` when learning TLS automation
+- [x] Add `cert-manager` when learning TLS automation
 - [ ] Add `external-dns` when learning DNS automation
 
 ## 12. Repo structure and documentation
