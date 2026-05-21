@@ -62,6 +62,11 @@ def list_items() -> dict[str, list[dict[str, object]]]:
     return {"items": SAMPLE_ITEMS}
 
 
+@app.get("/api/v1/items/count")
+def get_item_count() -> dict[str, int]:
+    return {"count": len(SAMPLE_ITEMS)}
+
+
 @app.get("/api/v1/items/{item_id}")
 def get_item(item_id: int) -> dict[str, object]:
     for item in SAMPLE_ITEMS:
@@ -69,11 +74,6 @@ def get_item(item_id: int) -> dict[str, object]:
             return item
 
     raise HTTPException(status_code=404, detail=f"Item {item_id} not found")
-
-
-@app.get("/api/v1/items/count")
-def get_item_count() -> dict[str, int]:
-    return {"count": len(SAMPLE_ITEMS)}
 
 
 def get_runtime_config() -> dict[str, object]:
