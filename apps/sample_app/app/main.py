@@ -84,9 +84,7 @@ def get_runtime_config() -> dict[str, object]:
         "external_api_base_url": os.getenv("EXTERNAL_API_BASE_URL", "unknown"),
         "database_configured": secret_is_configured("DATABASE_URL_SECRET_NAME"),
         "jwt_secret_configured": secret_is_configured("JWT_SECRET_NAME"),
-        "third_party_api_key_configured": secret_is_configured(
-            "THIRD_PARTY_API_KEY_SECRET_NAME"
-        ),
+        "third_party_api_key_configured": secret_is_configured("THIRD_PARTY_API_KEY_SECRET_NAME"),
         "app_version": get_app_version(),
     }
 

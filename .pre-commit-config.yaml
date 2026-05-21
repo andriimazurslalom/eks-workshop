@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"]
+        exclude: ^charts/sample-app/templates/
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.12
+    hooks:
+      - id: ruff
+        args: [--fix]
+        files: ^apps/sample_app/(app|tests)/.*\.py$
+      - id: ruff-format
+        files: ^apps/sample_app/(app|tests)/.*\.py$
+
+  - repo: local
+    hooks:
+      - id: check-chart-app-version
+        name: check chart appVersion drift
+        entry: make check-chart-app-version
+        language: system
+        pass_filenames: false
+        files: ^(apps/sample_app/pyproject\.toml|charts/sample-app/Chart\.yaml)$
+
+      - id: commit-msg-lint
+        name: conventional commit message lint
+        entry: python3 scripts/lint_commit_msg.py
+        language: system
+        stages: [commit-msg]

@@ -57,10 +57,7 @@ def get_secret(secret_name_env_var: str, local_fallback: str = None) -> str:
     except ClientError as e:
         # Fallback for local development
         if local_fallback is not None:
-            print(
-                f"Warning: Failed to fetch secret '{secret_name}' from AWS."
-                f"Using local fallback."
-            )
+            print(f"Warning: Failed to fetch secret '{secret_name}' from AWS.Using local fallback.")
             return local_fallback
         else:
             raise ValueError(f"Failed to fetch secret '{secret_name}': {e}")

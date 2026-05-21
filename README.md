@@ -40,12 +40,6 @@ Allowed commit types:
 - test: test-only change
 - chore: tooling/config/maintenance
 
-Install hooks with:
-
-```bash
-make install-git-hooks
-```
-
 ## Release Flow
 
 1. `make release-patch` or `make release-minor`

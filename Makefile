@@ -1,11 +1,18 @@
 AWS_PROFILE ?= playground
 
-.PHONY: sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release install-git-hooks release-notes publish-release-tag release-publish-tag
+.PHONY: install-pre-commit run-pre-commit run-pre-commit-all sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release release-notes publish-release-tag release-publish-tag
 
-install-git-hooks:
-	git config core.hooksPath .githooks
-	chmod +x .githooks/commit-msg
-	chmod +x scripts/lint_commit_msg.py
+install-pre-commit:
+	git config --unset core.hooksPath || true
+	python3 -m pip install -e "apps/sample_app[test,dev]"
+	pre-commit install
+	pre-commit install --hook-type commit-msg
+
+run-pre-commit:
+	pre-commit run
+
+run-pre-commit-all:
+	pre-commit run --all-files
 
 
 sync-chart-app-version:

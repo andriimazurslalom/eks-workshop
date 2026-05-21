@@ -6,9 +6,7 @@ from app import utils
 def test_get_secret_uses_local_fallback_when_env_var_missing(monkeypatch):
     monkeypatch.delenv("DATABASE_URL_SECRET_NAME", raising=False)
 
-    value = utils.get_secret(
-        "DATABASE_URL_SECRET_NAME", local_fallback="sqlite://local"
-    )
+    value = utils.get_secret("DATABASE_URL_SECRET_NAME", local_fallback="sqlite://local")
 
     assert value == "sqlite://local"
 
@@ -40,14 +38,10 @@ def test_get_secret_reads_secret_string(monkeypatch):
 
 
 def test_secret_is_configured_returns_false_on_client_error(monkeypatch):
-    monkeypatch.setenv(
-        "THIRD_PARTY_API_KEY_SECRET_NAME", "sample-app/third-party-api-key"
-    )
+    monkeypatch.setenv("THIRD_PARTY_API_KEY_SECRET_NAME", "sample-app/third-party-api-key")
 
     error = ClientError(
-        error_response={
-            "Error": {"Code": "AccessDeniedException", "Message": "denied"}
-        },
+        error_response={"Error": {"Code": "AccessDeniedException", "Message": "denied"}},
         operation_name="GetSecretValue",
     )
 
