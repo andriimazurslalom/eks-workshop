@@ -1,11 +1,15 @@
 replicaCount: 1
 
+image:
+  repository: 306536996258.dkr.ecr.eu-central-1.amazonaws.com/sample-app
+  tag: "0.7.0-test"
+
 service:
   type: ClusterIP
 
 config:
   appEnv: dev
-  logLevel: debug
+  logLevel: info
 
 ingress:
   tls:

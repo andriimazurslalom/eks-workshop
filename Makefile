@@ -1,6 +1,6 @@
 AWS_PROFILE ?= playground
 
-.PHONY: install-pre-commit run-pre-commit run-pre-commit-all sync-chart-app-version check-chart-app-version aws-credentials release-patch release-minor tag-release release-notes publish-release-tag release-publish-tag
+.PHONY: install-pre-commit run-pre-commit run-pre-commit-all sync-chart-app-version check-chart-app-version set-dev-image-tag aws-credentials release-patch release-minor tag-release release-notes publish-release-tag release-publish-tag
 
 install-pre-commit:
 	git config --unset core.hooksPath || true
@@ -19,6 +19,11 @@ sync-chart-app-version:
 	@APP_VERSION=$$(grep '^version' apps/sample_app/pyproject.toml | head -1 | sed -E 's/version\s*=\s*"([^"]+)".*/\1/'); \
 	sed -i "s/^appVersion:.*/appVersion: \"$$APP_VERSION\"/" charts/sample-app/Chart.yaml; \
 	echo "Updated charts/sample-app/Chart.yaml appVersion to $$APP_VERSION"
+
+set-dev-image-tag:
+	@test -n "$(IMAGE_TAG)" || (echo "IMAGE_TAG is required. Usage: make set-dev-image-tag IMAGE_TAG=<tag>" && exit 1)
+	@sed -i 's/^  tag: ".*"/  tag: "$(IMAGE_TAG)"/' charts/sample-app/values-dev.yaml
+	@echo "Updated charts/sample-app/values-dev.yaml image.tag to $(IMAGE_TAG)"
 
 check-chart-app-version:
 	@APP_VERSION=$$(grep '^version' apps/sample_app/pyproject.toml | head -1 | sed -E 's/version\s*=\s*"([^"]+)".*/\1/'); \

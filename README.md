@@ -42,17 +42,34 @@ Allowed commit types:
 
 ## Release Flow
 
+This repo uses Conventional Commits and Release Please for release automation.
+
+Release Please watches commits merged into `main`, opens a release PR with the next version bump and changelog updates, and creates the Git tag and GitHub release after that PR is merged.
+
+For local/manual version bump experiments, the following targets still exist:
+
 1. `make release-patch` or `make release-minor`
 2. commit the version bump
 3. `make publish-release-tag`
 4. `make release-notes`
 
+Those targets update the application version and Helm chart `appVersion`. They do not change environment deployment state such as `charts/sample-app/values-dev.yaml`.
 
-## Release Automation
+## Deployment State
 
-This repo uses Conventional Commits and Release Please for release automation.
+Helm values files represent environment deployment intent.
 
-Release Please watches commits merged into `main`, opens a release PR with the next version bump and changelog updates, and creates the Git tag and GitHub release after that PR is merged.
+- `charts/sample-app/values-dev.yaml` defines which image tag the dev environment should run
+- release metadata is separate from deployment state
+- under GitOps, Argo CD should reconcile the cluster from those values files
+
+To update the dev deployment tag intentionally:
+
+```bash
+make set-dev-image-tag IMAGE_TAG=<image-tag>
+```
+
+That command changes only `charts/sample-app/values-dev.yaml`. Commit that change separately when you want Argo CD to deploy a new image.
 
 
 ## How the repo evolved

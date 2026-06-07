@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sample-app-dev
+  namespace: argocd
+spec:
+  project: sample-app
+  source:
+    repoURL: https://github.com/andriimazurslalom/eks-workshop.git
+    targetRevision: main
+    path: charts/sample-app
+    helm:
+      releaseName: sample-app
+      valueFiles:
+        - values.yaml
+        - values-dev.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sample-app
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

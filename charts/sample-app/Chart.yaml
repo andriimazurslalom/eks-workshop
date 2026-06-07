@@ -3,4 +3,4 @@ name: sample-app
 description: A Helm chart for deploying the sample FastAPI app
 type: application
 version: 0.1.0
-appVersion: 0.6.0
+appVersion: "0.7.0"
