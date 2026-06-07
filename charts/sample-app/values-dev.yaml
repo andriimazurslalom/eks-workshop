@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: 306536996258.dkr.ecr.eu-central-1.amazonaws.com/sample-app
-  tag: "0.7.0-test"
+  tag: "0.8.0-test"
 
 service:
   type: ClusterIP
